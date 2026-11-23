@@ -1,0 +1,34 @@
+name: Patato Video Olustur
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  render-video:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Depoyu indir
+        uses: actions/checkout@v4
+
+      - name: Node.js kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Paketleri yukle
+        run: npm install
+
+      - name: Tarayici hazirla
+        run: npx remotion browser ensure
+
+      - name: Videoyu olustur (MP4)
+        run: npx remotion render src/index.ts PatatoHikayesi out/patato-hikayesi.mp4 --gl=swangle
+
+      - name: Videoyu indirilebilir yap
+        uses: actions/upload-artifact@v4
+        with:
+          name: patato-hikayesi-video
+          path: out/patato-hikayesi.mp4
+          
